@@ -1,0 +1,21 @@
+name: Terraform Apply (manual)
+
+on:
+  workflow_dispatch:   # manual trigger only
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo                   #clone the github repo into a fresh VM
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform                #install terraform into the VM
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init                  # Run terraform init as a command. In the VM
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve    # run terraform apply -auto-approve as a command. In the VM
