@@ -1,18 +1,15 @@
 terraform {
   required_providers {
-    random = {
-      source  = "hashicorp/random"
-      version = "3.6.0"
+    local = {
+      source  = "hashicorp/local"
+      version = "2.5.1"
     }
   }
 }
 
-provider "random" {}
+provider "local" {}
 
-resource "random_pet" "my_pet" {
-  length = 2
-}
-
-output "pet_name" {
-  value = random_pet.my_pet.id
+resource "local_file" "hello" {
+  content  = "Hello from Terraform via GitHub Actions!"
+  filename = "${path.module}/hello.txt"
 }
