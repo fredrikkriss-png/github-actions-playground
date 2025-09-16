@@ -1,0 +1,44 @@
+name: Terraform CI (plan)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "**.tf"
+      - ".github/workflows/terraform-plan.yml"
+  pull_request:
+    paths:
+      - "**.tf"
+      - ".github/workflows/terraform-plan.yml"
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan (save output)
+        run: |
+          terraform plan -out tfplan
+          terraform show -no-color tfplan > plan.txt
+
+      - name: Upload plan as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: plan.txt
